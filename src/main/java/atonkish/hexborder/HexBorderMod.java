@@ -11,7 +11,7 @@ import net.fabricmc.api.ModInitializer;
 
 import atonkish.hexborder.integration.autoconfig.ModSave;
 public class HexBorderMod implements ModInitializer {
-	public static final String MOD_ID = "reputation";
+	public static final String MOD_ID = "hexborder";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static HexBorderConfig CONFIG;
 
