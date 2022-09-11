@@ -4,10 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 import net.fabricmc.api.ModInitializer;
 
+import atonkish.hexborder.integration.autoconfig.ModSave;
 public class HexBorderMod implements ModInitializer {
 	public static final String MOD_ID = "reputation";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -16,7 +18,8 @@ public class HexBorderMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		// Auto Config
-		AutoConfig.register(HexBorderConfig.class, GsonConfigSerializer::new);
+		ConfigHolder<HexBorderConfig> manager = AutoConfig.register(HexBorderConfig.class, GsonConfigSerializer::new);
+		manager.registerSaveListener(new ModSave<HexBorderConfig>());
 		CONFIG = AutoConfig.getConfigHolder(HexBorderConfig.class).getConfig();
 	}
 }
