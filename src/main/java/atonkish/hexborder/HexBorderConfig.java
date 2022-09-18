@@ -25,11 +25,11 @@ public class HexBorderConfig implements ModConfigData {
 
     @ConfigEntry.Category("colors")
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public HexBorderColors mainColors = new HexBorderColors(0x800000FF, 0x80FF0000, 0x80009B9B, 0x80FFFF00, 0x800000FF);
+    public HexBorderColors mainColors = new HexBorderColors(0xFF0000FF, 0xFFFF0000, 0xFF009B9B, 0xFFFFFF00, 0xFF0000FF);
 
     @ConfigEntry.Category("colors")
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public HexBorderColors neighborColors = new HexBorderColors(0x00000000, 0x80FF0000, 0x80009B9B, 0x80FFFF00, 0x80FFFF00);
+    public HexBorderColors neighborColors = new HexBorderColors(0x00000000, 0xFFFF0000, 0xFF009B9B, 0xFFFFFF00, 0x00000000);
 
     @ConfigEntry.Category("f3KeyBindings")
     @ConfigEntry.Gui.TransitiveObject
