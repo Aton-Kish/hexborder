@@ -20,13 +20,16 @@ public class HexBorderConfig implements ModConfigData {
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public Offset offset = new Offset();
 
-    @ConfigEntry.Category("colors")
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public HexBorderColors mainColors = new HexBorderColors(0x800000FF, 0x80FF0000, 0x80009B9B, 0x80FFFF00);
+    @ConfigEntry.BoundedDiscrete(min = 4, max = 32)
+    public int viewDistance = 16;
 
     @ConfigEntry.Category("colors")
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public HexBorderColors neighborColors = new HexBorderColors(0x00000000, 0x80FF0000, 0x80009B9B, 0x80FFFF00);
+    public HexBorderColors mainColors = new HexBorderColors(0x800000FF, 0x80FF0000, 0x80009B9B, 0x80FFFF00, 0x800000FF);
+
+    @ConfigEntry.Category("colors")
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    public HexBorderColors neighborColors = new HexBorderColors(0x00000000, 0x80FF0000, 0x80009B9B, 0x80FFFF00, 0x80FFFF00);
 
     @ConfigEntry.Category("f3KeyBindings")
     @ConfigEntry.Gui.TransitiveObject
@@ -50,12 +53,16 @@ public class HexBorderConfig implements ModConfigData {
         @ConfigEntry.ColorPicker(allowAlpha = true)
         public int sideHorizontalSubLine;
 
+        @ConfigEntry.ColorPicker(allowAlpha = true)
+        public int grid;
+
         public HexBorderColors(int originVerticalLine, int vertexVerticalLine,
-                int sideHorizontalMainLine, int sideHorizontalSubLine) {
+                int sideHorizontalMainLine, int sideHorizontalSubLine, int grid) {
             this.originVerticalLine = originVerticalLine;
             this.vertexVerticalLine = vertexVerticalLine;
             this.sideHorizontalMainLine = sideHorizontalMainLine;
             this.sideHorizontalSubLine = sideHorizontalSubLine;
+            this.grid = grid;
         }
     }
 
