@@ -1,4 +1,4 @@
-package atonkish.hexborder.integration.autoconfig;
+package atonkish.hexborder.integration.autoconfig.gui;
 
 import java.util.Collections;
 import java.util.Optional;

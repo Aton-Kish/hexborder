@@ -1,4 +1,4 @@
-package atonkish.hexborder.integration.autoconfig;
+package atonkish.hexborder.integration.autoconfig.serializer;
 
 import java.lang.reflect.Type;
 

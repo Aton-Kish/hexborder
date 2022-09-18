@@ -1,5 +1,6 @@
-package atonkish.hexborder.integration.autoconfig;
+package atonkish.hexborder.integration.autoconfig.event;
 
+import atonkish.hexborder.integration.autoconfig.ModConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.event.ConfigSerializeEvent.Save;
 

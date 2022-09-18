@@ -7,10 +7,9 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 
 import net.fabricmc.api.ModInitializer;
-
-import atonkish.hexborder.integration.autoconfig.ModGsonConfigSerializer;
-import atonkish.hexborder.integration.autoconfig.ModGuiProviders;
-import atonkish.hexborder.integration.autoconfig.ModSave;
+import atonkish.hexborder.integration.autoconfig.event.ModSave;
+import atonkish.hexborder.integration.autoconfig.gui.ModGuiProviders;
+import atonkish.hexborder.integration.autoconfig.serializer.ModGsonConfigSerializer;
 
 public class HexBorderMod implements ModInitializer {
 	public static final String MOD_ID = "hexborder";
