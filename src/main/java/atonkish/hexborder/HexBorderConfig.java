@@ -18,7 +18,15 @@ public class HexBorderConfig implements ModConfigData {
     public int side = 8;
 
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    public Offset offset = new Offset();
+
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public F3KeyBindings f3KeyBindings = new F3KeyBindings();
+
+    public static class Offset {
+        public int x = 0;
+        public int z = 0;
+    }
 
     public static class F3KeyBindings {
         public ModifierKeyCode toggleShowBorderKey = ModifierKeyCode.of(
