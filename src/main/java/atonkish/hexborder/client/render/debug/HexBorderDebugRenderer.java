@@ -1,5 +1,8 @@
 package atonkish.hexborder.client.render.debug;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.api.EnvType;
@@ -14,14 +17,16 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.debug.DebugRenderer.Renderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.World;
 
 import atonkish.hexborder.HexBorderConfig;
 import atonkish.hexborder.HexBorderMod;
 import atonkish.hexborder.HexBorderConfig.HexBorderColors;
-import atonkish.hexborder.util.math.Vec2;
 import atonkish.hexborder.util.polygon.Hexagon;
 import atonkish.hexborder.util.polygon.Polygon;
 
@@ -44,72 +49,73 @@ public class HexBorderDebugRenderer implements Renderer {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.disableTexture();
         RenderSystem.disableBlend();
-        RenderSystem.lineWidth(1.0f);
 
         Tessellator tessellator = Tessellator.getInstance();
 
-        Entity entity = this.client.gameRenderer.getCamera().getFocusedEntity();
-        Vec3d pos = entity.getPos();
+        World world = this.client.world;
+        Vec3d playerPos = this.client.player.getPos();
         Vec3d offset = new Vec3d(this.config.offset.x, 0, this.config.offset.z);
         int side = this.config.side;
-        Polygon polygon = new Hexagon(pos, offset, side);
+        Polygon polygon = new Hexagon(playerPos, offset, side);
 
-        this.renderMainPolygon(tessellator, polygon, cameraX, cameraY, cameraZ);
+        this.renderPolygon(tessellator, this.config.mainColors, polygon, world, playerPos, cameraX, cameraY, cameraZ);
         for (int i = 0; i < polygon.getVerticesNumber(); i++) {
-            this.renderNeighborPolygon(tessellator, polygon, i, cameraX, cameraY, cameraZ);
+            this.renderPolygon(tessellator, this.config.neighborColors, polygon.getNeighbor(i), world, playerPos,
+                    cameraX, cameraY, cameraZ);
         }
 
+        RenderSystem.lineWidth(1.0f);
         RenderSystem.enableBlend();
         RenderSystem.enableTexture();
     }
 
-    private void renderMainPolygon(Tessellator tessellator, Polygon polygon,
-            double cameraX, double cameraY, double cameraZ) {
-        Vec2<Integer> index = polygon.getMainOriginIndex();
-        HexBorderColors colors = this.config.mainColors;
-        this.renderLine(tessellator, polygon, index, colors, cameraX, cameraY, cameraZ);
-    }
-
-    private void renderNeighborPolygon(Tessellator tessellator, Polygon polygon, int i,
-            double cameraX, double cameraY, double cameraZ) {
-        Vec2<Integer> index = polygon.getNeighborOriginIndex(i);
-        HexBorderColors colors = this.config.neighborColors;
-        this.renderLine(tessellator, polygon, index, colors, cameraX, cameraY, cameraZ);
-    }
-
-    private void renderLine(Tessellator tessellator, Polygon polygon, Vec2<Integer> index, HexBorderColors colors,
-            double cameraX, double cameraY, double cameraZ) {
+    private void renderPolygon(Tessellator tessellator, HexBorderColors colors, Polygon polygon,
+            World world, Vec3d playerPos, double cameraX, double cameraY, double cameraZ) {
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-        Vec3d origin = polygon.getOriginPos(index);
+        Vec3d origin = polygon.getOriginPos().add(-cameraX, 0, -cameraZ);
+        Vec3d vertices[] = new Vec3d[polygon.getVerticesNumber()];
+        for (int i = 0; i < polygon.getVerticesNumber(); i++) {
+            vertices[i] = polygon.getVertexPos(i).add(-cameraX, 0, -cameraZ);
+        }
+        List<Vec3d> areaPointList = polygon.getAreaPointList();
 
-        int worldBottomY = this.client.world.getBottomY();
-        int worldTopY = this.client.world.getTopY();
+        int worldBottomY = world.getBottomY();
+        int worldTopY = world.getTopY();
         double bottomY = (double) worldBottomY - cameraY;
         double topY = (double) worldTopY - cameraY;
 
-        double x, y, z;
+        RenderSystem.lineWidth(1.0f);
+        bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
         // Origin Vertical Line
-        x = origin.x - cameraX;
-        z = origin.z - cameraZ;
-        this.renderVerticalLine(bufferBuilder, colors.originVerticalLine, x, z, bottomY, topY);
+        this.renderVerticalLine(bufferBuilder, colors.originVerticalLine, origin.x, origin.z, bottomY, topY);
 
         // Vertex Vertical Line
-        Vec3d vertices[] = new Vec3d[polygon.getVerticesNumber()];
-        for (int j = 0; j < polygon.getVerticesNumber(); j++) {
-            vertices[j] = polygon.getVertexPos(j, index);
-            x = vertices[j].x - cameraX;
-            z = vertices[j].z - cameraZ;
-            this.renderVerticalLine(bufferBuilder, colors.vertexVerticalLine, x, z, bottomY, topY);
+        for (Vec3d vertex : vertices) {
+            this.renderVerticalLine(bufferBuilder, colors.vertexVerticalLine, vertex.x, vertex.z, bottomY, topY);
         }
 
         // Horizontal Polyline
         for (int h = worldBottomY; h <= worldTopY; h += 4) {
             int sideHorizontalColor = h % 8 == 0 ? colors.sideHorizontalMainLine : colors.sideHorizontalSubLine;
-            y = (double) h - cameraY;
-            this.renderHorizontalPolyline(bufferBuilder, sideHorizontalColor, y, vertices, cameraX, cameraZ);
+            double y = (double) h - cameraY;
+            this.renderHorizontalPolyline(bufferBuilder, sideHorizontalColor, y, vertices);
+        }
+
+        tessellator.draw();
+
+        RenderSystem.lineWidth(2.0f);
+        bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+
+        for (Vec3d point : areaPointList) {
+            Optional<Double> gridY = this.retrieveGridY(world, playerPos, point);
+            if (gridY.isEmpty()) {
+                continue;
+            }
+
+            Vec3d gridPos = new Vec3d(point.x, gridY.get() + 0.05D, point.z).add(-cameraX, -cameraY, -cameraZ);
+            this.renderGrid(bufferBuilder, colors.grid, world, playerPos, gridPos);
         }
 
         tessellator.draw();
@@ -123,19 +129,54 @@ public class HexBorderDebugRenderer implements Renderer {
         bufferBuilder.vertex(x, topY, z).color(TRANSPARENT).next();
     }
 
-    private void renderHorizontalPolyline(BufferBuilder bufferBuilder, int color, double y,
-            Vec3d[] vertices, double cameraX, double cameraZ) {
-        double x0 = vertices[0].x - cameraX;
-        double z0 = vertices[0].z - cameraZ;
-        bufferBuilder.vertex(x0, y, z0).color(TRANSPARENT).next();
+    private void renderHorizontalPolyline(BufferBuilder bufferBuilder, int color, double y, Vec3d[] vertices) {
+        bufferBuilder.vertex(vertices[0].x, y, vertices[0].z).color(TRANSPARENT).next();
 
         for (Vec3d vertex : vertices) {
-            double x = vertex.x - cameraX;
-            double z = vertex.z - cameraZ;
-            bufferBuilder.vertex(x, y, z).color(color).next();
+            bufferBuilder.vertex(vertex.x, y, vertex.z).color(color).next();
         }
 
-        bufferBuilder.vertex(x0, y, z0).color(color).next();
-        bufferBuilder.vertex(x0, y, z0).color(TRANSPARENT).next();
+        bufferBuilder.vertex(vertices[0].x, y, vertices[0].z).color(color).next();
+        bufferBuilder.vertex(vertices[0].x, y, vertices[0].z).color(TRANSPARENT).next();
+    }
+
+    private void renderGrid(BufferBuilder bufferBuilder, int color, World world, Vec3d playerPos, Vec3d gridPos) {
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
+        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
+        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(color).next();
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
+        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(color).next();
+        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
+
+        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
+        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
+    }
+
+    private Optional<Double> retrieveGridY(World world, Vec3d playerPos, Vec3d gridPos) {
+        Vec3d retriever = new Vec3d(gridPos.x, playerPos.y + 1, gridPos.z);
+
+        while (playerPos.distanceTo(retriever) < this.config.viewDistance) {
+            BlockPos gridBlockPos = new BlockPos(retriever);
+            BlockPos footBlockPos = gridBlockPos.down();
+
+            VoxelShape gridShape = world.getBlockState(gridBlockPos).getCollisionShape(world, gridBlockPos);
+            VoxelShape footShape = world.getBlockState(footBlockPos).getCollisionShape(world, footBlockPos);
+
+            if ((gridShape.isEmpty() || gridShape.getMax(Axis.Y) < 1.0) && footShape.getMax(Axis.Y) == 1.0) {
+                return Optional.of((double) gridBlockPos.getY());
+            }
+
+            retriever = retriever.add(0, -1, 0);
+        }
+
+        return Optional.empty();
     }
 }
