@@ -1,10 +1,11 @@
 package atonkish.hexborder.integration.autoconfig.event;
 
-import atonkish.hexborder.integration.autoconfig.ModConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.event.ConfigSerializeEvent.Save;
 
 import net.minecraft.util.ActionResult;
+
+import atonkish.hexborder.integration.autoconfig.ModConfigData;
 
 public class ModSave<T extends ModConfigData> implements Save<T> {
     @Override

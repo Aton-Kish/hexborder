@@ -7,6 +7,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 
 import net.fabricmc.api.ModInitializer;
+
 import atonkish.hexborder.integration.autoconfig.event.ModSave;
 import atonkish.hexborder.integration.autoconfig.gui.ModGuiProviders;
 import atonkish.hexborder.integration.autoconfig.serializer.ModGsonConfigSerializer;
