@@ -9,13 +9,13 @@ import atonkish.hexborder.util.math.Vec2;
 public interface Polygon {
     public int getVerticesNumber();
 
-    public Vec2<Integer> getMainOriginIndex();
+    public Polygon getNeighbor(int i);
 
-    public Vec2<Integer> getNeighborOriginIndex(int i);
+    public Vec2<Integer> getOriginIndex();
 
-    public Vec3d getOriginPos(Vec2<Integer> index);
+    public Vec3d getOriginPos();
 
-    public Vec3d getVertexPos(int i, Vec2<Integer> index);
+    public Vec3d getVertexPos(int i);
 
-    public List<Vec3d> getPosList(Vec2<Integer> index);
+    public List<Vec3d> getAreaPointList();
 }
