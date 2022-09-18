@@ -79,7 +79,10 @@ public class Hexagon implements Polygon {
     @Override
     public List<Vec3d> getAreaPointList() {
         Vec3d origin = this.getOriginPos();
-        Vec3d neighbor = this.getNeighbor(0).getOriginPos();
+
+        Vec3d vec1 = this.getVertexPos(0);
+        Vec3d vec2 = this.getVertexPos(1);
+        Vec3d rel1 = vec1.relativize(vec2);
 
         List<Vec3d> deltaListFragment = new ArrayList<Vec3d>();
         for (int z = 0; z < Math.round(SQRT3 * side / 2.0D); z++) {
@@ -88,7 +91,7 @@ public class Hexagon implements Polygon {
 
                 if (x >= side / 2.0D) {
                     Vec3d pos = origin.add(delta).add(0.5, 0, 0.5);
-                    if (origin.distanceTo(pos) > neighbor.distanceTo(pos)) {
+                    if (Hexagon.calcCrossXZ(rel1, vec1.relativize(pos)) < 0) {
                         continue;
                     }
                 }
@@ -146,18 +149,25 @@ public class Hexagon implements Polygon {
         int n1 = (int) Math.floor(approximateOriginIndex.y);
         int n2 = (int) Math.ceil(approximateOriginIndex.y);
 
-        Vec2<Integer> index1 = new Vec2<Integer>(m1, (m1 - n1) % 2 == 0 ? n1 : n2);
-        Vec2<Integer> index2 = new Vec2<Integer>(m2, (m1 - n1) % 2 == 0 ? n2 : n1);
+        boolean isEven = (m1 - n1) % 2 == 0;
 
-        Vec3d origin1 = new Hexagon(index1, offset, side).getOriginPos();
-        Vec3d origin2 = new Hexagon(index2, offset, side).getOriginPos();
+        Vec2<Integer> index1 = new Vec2<Integer>(m1, isEven ? n1 : n2);
+        Vec2<Integer> index2 = new Vec2<Integer>(m2, isEven ? n2 : n1);
 
-        return origin1.distanceTo(pos) < origin2.distanceTo(pos) ? index1 : index2;
+        Hexagon hexagon = new Hexagon(index1, offset, side);
+        Vec3d vec1 = hexagon.getVertexPos(isEven ? 0 : 5);
+        Vec3d vec2 = hexagon.getVertexPos(isEven ? 1 : 0);
+
+        return Hexagon.calcCrossXZ(vec1.relativize(vec2), vec1.relativize(pos)) >= 0 ? index1 : index2;
     }
 
     private static Vec2<Double> calcApproximateOriginIndex(Vec3d pos, Vec3d offset, int side) {
         double x = (pos.x - offset.x) / (3.0D * side / 2.0D);
         double z = (pos.z - offset.z) / Math.round(SQRT3 * side / 2.0D);
         return new Vec2<Double>(x, z);
+    }
+
+    private static double calcCrossXZ(Vec3d vec1, Vec3d vec2) {
+        return vec1.x * vec2.z - vec1.z * vec2.x;
     }
 }
