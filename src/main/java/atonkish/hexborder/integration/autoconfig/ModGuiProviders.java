@@ -37,7 +37,7 @@ public class ModGuiProviders {
                             ENTRY_BUILDER
                                     .startModifierKeyCodeField(Text.translatable(i18n),
                                             Utils.getUnsafely(field, config, ModifierKeyCode.unknown()))
-                                    .setModifierDefaultValue(() -> Utils.getUnsafely(field, config))
+                                    .setModifierDefaultValue(() -> Utils.getUnsafely(field, defaults))
                                     .setModifierSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue))
                                     .build());
                 },
