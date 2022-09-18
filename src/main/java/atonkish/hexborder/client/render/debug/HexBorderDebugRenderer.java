@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 
+import atonkish.hexborder.HexBorderConfig;
 import atonkish.hexborder.HexBorderMod;
 import atonkish.hexborder.HexBorderConfig.HexBorderColors;
 import atonkish.hexborder.util.math.Vec2;
@@ -29,9 +30,11 @@ public class HexBorderDebugRenderer implements Renderer {
     private static final int TRANSPARENT = ColorHelper.Argb.getArgb(0, 0, 0, 0);
 
     private final MinecraftClient client;
+    private final HexBorderConfig config;
 
     public HexBorderDebugRenderer(MinecraftClient client) {
         this.client = client;
+        this.config = HexBorderMod.CONFIG_MANAGER.get();
     }
 
     @Override
@@ -47,7 +50,9 @@ public class HexBorderDebugRenderer implements Renderer {
 
         Entity entity = this.client.gameRenderer.getCamera().getFocusedEntity();
         Vec3d pos = entity.getPos();
-        Polygon polygon = new Hexagon(pos);
+        Vec3d offset = new Vec3d(this.config.offset.x, 0, this.config.offset.z);
+        int side = this.config.side;
+        Polygon polygon = new Hexagon(pos, offset, side);
 
         this.renderMainPolygon(tessellator, polygon, cameraX, cameraY, cameraZ);
         for (int i = 0; i < polygon.getVerticesNumber(); i++) {
@@ -61,14 +66,14 @@ public class HexBorderDebugRenderer implements Renderer {
     private void renderMainPolygon(Tessellator tessellator, Polygon polygon,
             double cameraX, double cameraY, double cameraZ) {
         Vec2<Integer> index = polygon.getMainOriginIndex();
-        HexBorderColors colors = HexBorderMod.CONFIG_MANAGER.get().mainColors;
+        HexBorderColors colors = this.config.mainColors;
         this.renderLine(tessellator, polygon, index, colors, cameraX, cameraY, cameraZ);
     }
 
     private void renderNeighborPolygon(Tessellator tessellator, Polygon polygon, int i,
             double cameraX, double cameraY, double cameraZ) {
         Vec2<Integer> index = polygon.getNeighborOriginIndex(i);
-        HexBorderColors colors = HexBorderMod.CONFIG_MANAGER.get().neighborColors;
+        HexBorderColors colors = this.config.neighborColors;
         this.renderLine(tessellator, polygon, index, colors, cameraX, cameraY, cameraZ);
     }
 

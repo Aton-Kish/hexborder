@@ -5,8 +5,6 @@ import java.util.List;
 
 import net.minecraft.util.math.Vec3d;
 
-import atonkish.hexborder.HexBorderConfig;
-import atonkish.hexborder.HexBorderMod;
 import atonkish.hexborder.util.math.Vec2;
 
 public class Hexagon implements Polygon {
@@ -17,11 +15,10 @@ public class Hexagon implements Polygon {
     private final Vec3d offset;
     private final int side;
 
-    public Hexagon(Vec3d pos) {
-        HexBorderConfig config = HexBorderMod.CONFIG_MANAGER.get();
+    public Hexagon(Vec3d pos, Vec3d offset, int side) {
         this.pos = pos;
-        this.offset = new Vec3d(config.offset.x, 0, config.offset.z);
-        this.side = config.side;
+        this.offset = offset;
+        this.side = side;
     }
 
     @Override
