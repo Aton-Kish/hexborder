@@ -123,6 +123,11 @@ public class HexBorderDebugRenderer implements Renderer {
 
     private void renderVerticalLine(BufferBuilder bufferBuilder, int color, double x, double z,
             double bottomY, double topY) {
+        int alpha = ColorHelper.Argb.getAlpha(color);
+        if (alpha == 0) {
+            return;
+        }
+
         bufferBuilder.vertex(x, bottomY, z).color(TRANSPARENT).next();
         bufferBuilder.vertex(x, bottomY, z).color(color).next();
         bufferBuilder.vertex(x, topY, z).color(color).next();
@@ -130,6 +135,11 @@ public class HexBorderDebugRenderer implements Renderer {
     }
 
     private void renderHorizontalPolyline(BufferBuilder bufferBuilder, int color, double y, Vec3d[] vertices) {
+        int alpha = ColorHelper.Argb.getAlpha(color);
+        if (alpha == 0) {
+            return;
+        }
+
         bufferBuilder.vertex(vertices[0].x, y, vertices[0].z).color(TRANSPARENT).next();
 
         for (Vec3d vertex : vertices) {
@@ -141,6 +151,11 @@ public class HexBorderDebugRenderer implements Renderer {
     }
 
     private void renderGrid(BufferBuilder bufferBuilder, int color, World world, Vec3d playerPos, Vec3d gridPos) {
+        int alpha = ColorHelper.Argb.getAlpha(color);
+        if (alpha == 0) {
+            return;
+        }
+
         bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
         bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
         bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
