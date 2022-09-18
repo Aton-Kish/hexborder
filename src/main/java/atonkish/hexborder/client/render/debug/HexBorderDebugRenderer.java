@@ -18,17 +18,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 
+import atonkish.hexborder.HexBorderMod;
+import atonkish.hexborder.HexBorderConfig.HexBorderColors;
 import atonkish.hexborder.util.math.Vec2;
 import atonkish.hexborder.util.polygon.Hexagon;
 import atonkish.hexborder.util.polygon.Polygon;
 
 @Environment(value = EnvType.CLIENT)
 public class HexBorderDebugRenderer implements Renderer {
-    private static final int TRANSPARENT_COLOR = ColorHelper.Argb.getArgb(0, 0, 0, 0);
-    private static final int ORIGIN_VERTICAL_COLOR = ColorHelper.Argb.getArgb(128, 0, 0, 255);
-    private static final int VERTEX_VERTICAL_COLOR = ColorHelper.Argb.getArgb(128, 255, 0, 0);
-    private static final int SIDE_HORIZONTAL_MAIN_COLOR = ColorHelper.Argb.getArgb(128, 0, 155, 155);
-    private static final int SIDE_HORIZONTAL_SUB_COLOR = ColorHelper.Argb.getArgb(128, 255, 255, 0);
+    private static final int TRANSPARENT = ColorHelper.Argb.getArgb(0, 0, 0, 0);
 
     private final MinecraftClient client;
 
@@ -63,16 +61,18 @@ public class HexBorderDebugRenderer implements Renderer {
     private void renderMainPolygon(Tessellator tessellator, Polygon polygon,
             double cameraX, double cameraY, double cameraZ) {
         Vec2<Integer> index = polygon.getMainOriginIndex();
-        this.renderLine(tessellator, polygon, index, cameraX, cameraY, cameraZ);
+        HexBorderColors colors = HexBorderMod.CONFIG_MANAGER.get().mainColors;
+        this.renderLine(tessellator, polygon, index, colors, cameraX, cameraY, cameraZ);
     }
 
     private void renderNeighborPolygon(Tessellator tessellator, Polygon polygon, int i,
             double cameraX, double cameraY, double cameraZ) {
         Vec2<Integer> index = polygon.getNeighborOriginIndex(i);
-        this.renderLine(tessellator, polygon, index, cameraX, cameraY, cameraZ);
+        HexBorderColors colors = HexBorderMod.CONFIG_MANAGER.get().neighborColors;
+        this.renderLine(tessellator, polygon, index, colors, cameraX, cameraY, cameraZ);
     }
 
-    private void renderLine(Tessellator tessellator, Polygon polygon, Vec2<Integer> index,
+    private void renderLine(Tessellator tessellator, Polygon polygon, Vec2<Integer> index, HexBorderColors colors,
             double cameraX, double cameraY, double cameraZ) {
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
@@ -89,7 +89,7 @@ public class HexBorderDebugRenderer implements Renderer {
         // Origin Vertical Line
         x = origin.x - cameraX;
         z = origin.z - cameraZ;
-        this.renderVerticalLine(bufferBuilder, ORIGIN_VERTICAL_COLOR, x, z, bottomY, topY);
+        this.renderVerticalLine(bufferBuilder, colors.originVerticalLine, x, z, bottomY, topY);
 
         // Vertex Vertical Line
         Vec3d vertices[] = new Vec3d[polygon.getVerticesNumber()];
@@ -97,12 +97,12 @@ public class HexBorderDebugRenderer implements Renderer {
             vertices[j] = polygon.getVertexPos(j, index);
             x = vertices[j].x - cameraX;
             z = vertices[j].z - cameraZ;
-            this.renderVerticalLine(bufferBuilder, VERTEX_VERTICAL_COLOR, x, z, bottomY, topY);
+            this.renderVerticalLine(bufferBuilder, colors.vertexVerticalLine, x, z, bottomY, topY);
         }
 
         // Horizontal Polyline
         for (int h = worldBottomY; h <= worldTopY; h += 4) {
-            int sideHorizontalColor = h % 8 == 0 ? SIDE_HORIZONTAL_MAIN_COLOR : SIDE_HORIZONTAL_SUB_COLOR;
+            int sideHorizontalColor = h % 8 == 0 ? colors.sideHorizontalMainLine : colors.sideHorizontalSubLine;
             y = (double) h - cameraY;
             this.renderHorizontalPolyline(bufferBuilder, sideHorizontalColor, y, vertices, cameraX, cameraZ);
         }
@@ -112,17 +112,17 @@ public class HexBorderDebugRenderer implements Renderer {
 
     private void renderVerticalLine(BufferBuilder bufferBuilder, int color, double x, double z,
             double bottomY, double topY) {
-        bufferBuilder.vertex(x, bottomY, z).color(TRANSPARENT_COLOR).next();
+        bufferBuilder.vertex(x, bottomY, z).color(TRANSPARENT).next();
         bufferBuilder.vertex(x, bottomY, z).color(color).next();
         bufferBuilder.vertex(x, topY, z).color(color).next();
-        bufferBuilder.vertex(x, topY, z).color(TRANSPARENT_COLOR).next();
+        bufferBuilder.vertex(x, topY, z).color(TRANSPARENT).next();
     }
 
     private void renderHorizontalPolyline(BufferBuilder bufferBuilder, int color, double y,
             Vec3d[] vertices, double cameraX, double cameraZ) {
         double x0 = vertices[0].x - cameraX;
         double z0 = vertices[0].z - cameraZ;
-        bufferBuilder.vertex(x0, y, z0).color(TRANSPARENT_COLOR).next();
+        bufferBuilder.vertex(x0, y, z0).color(TRANSPARENT).next();
 
         for (Vec3d vertex : vertices) {
             double x = vertex.x - cameraX;
@@ -131,6 +131,6 @@ public class HexBorderDebugRenderer implements Renderer {
         }
 
         bufferBuilder.vertex(x0, y, z0).color(color).next();
-        bufferBuilder.vertex(x0, y, z0).color(TRANSPARENT_COLOR).next();
+        bufferBuilder.vertex(x0, y, z0).color(TRANSPARENT).next();
     }
 }
