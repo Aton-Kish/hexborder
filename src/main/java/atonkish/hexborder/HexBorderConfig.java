@@ -20,13 +20,16 @@ public class HexBorderConfig implements ModConfigData {
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public Offset offset = new Offset();
 
-    @ConfigEntry.Gui.CollapsibleObject()
+    @ConfigEntry.Category("colors")
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public HexBorderColors mainColors = new HexBorderColors(0x800000FF, 0x80FF0000, 0x80009B9B, 0x80FFFF00);
 
-    @ConfigEntry.Gui.CollapsibleObject()
+    @ConfigEntry.Category("colors")
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public HexBorderColors neighborColors = new HexBorderColors(0x00000000, 0x80FF0000, 0x80009B9B, 0x80FFFF00);
 
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    @ConfigEntry.Category("f3KeyBindings")
+    @ConfigEntry.Gui.TransitiveObject
     public F3KeyBindings f3KeyBindings = new F3KeyBindings();
 
     public static class Offset {
