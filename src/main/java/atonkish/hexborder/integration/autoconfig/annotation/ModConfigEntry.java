@@ -9,6 +9,6 @@ public class ModConfigEntry {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface HexagonSide {
-        long min();
+        int min();
     }
 }

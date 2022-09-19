@@ -39,32 +39,6 @@ public class ModGuiProviders {
                     return Collections.singletonList(
                             ENTRY_BUILDER
                                     .startIntField(Text.translatable(i18n),
-                                            Utils.getUnsafely(field, config, (int) side.min()))
-                                    .setDefaultValue(() -> Utils.getUnsafely(field, defaults))
-                                    .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue))
-                                    .setMin((int) side.min())
-                                    .setErrorSupplier((value) -> {
-                                        if (value % 2 != 0) {
-                                            return Optional
-                                                    .of(Text.translatable("text.cloth-config."
-                                                            + HexBorderMod.MOD_ID
-                                                            + ".error.odd"));
-                                        }
-
-                                        return Optional.empty();
-                                    })
-                                    .build());
-                },
-                field -> field.getType() == int.class || field.getType() == Integer.class,
-                ModConfigEntry.HexagonSide.class);
-
-        registry.registerAnnotationProvider(
-                (i18n, field, config, defaults, guiProvider) -> {
-                    ModConfigEntry.HexagonSide side = field.getAnnotation(ModConfigEntry.HexagonSide.class);
-
-                    return Collections.singletonList(
-                            ENTRY_BUILDER
-                                    .startLongField(Text.translatable(i18n),
                                             Utils.getUnsafely(field, config, side.min()))
                                     .setDefaultValue(() -> Utils.getUnsafely(field, defaults))
                                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue))
@@ -81,7 +55,7 @@ public class ModGuiProviders {
                                     })
                                     .build());
                 },
-                field -> field.getType() == long.class || field.getType() == Long.class,
+                field -> field.getType() == int.class || field.getType() == Integer.class,
                 ModConfigEntry.HexagonSide.class);
 
         return registry;
