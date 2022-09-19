@@ -32,6 +32,8 @@ public abstract class KeyboardMixin {
     public void processF3(final int key, final CallbackInfoReturnable<Boolean> cir) {
         HexBorderConfig config = HexBorderMod.CONFIG_MANAGER.get();
         Key toggleShowBorderKeyCode = config.f3KeyBindings.toggleShowBorderKey.getKeyCode();
+        Key incSideKey = config.f3KeyBindings.incSideKey.getKeyCode();
+        Key decSideKey = config.f3KeyBindings.decSideKey.getKeyCode();
         Key incOffsetXKeyCode = config.f3KeyBindings.incOffsetXKey.getKeyCode();
         Key decOffsetXKeyCode = config.f3KeyBindings.decOffsetXKey.getKeyCode();
         Key incOffsetZKeyCode = config.f3KeyBindings.incOffsetZKey.getKeyCode();
@@ -40,6 +42,23 @@ public abstract class KeyboardMixin {
         if (key == toggleShowBorderKeyCode.getCode()) {
             boolean bl2 = ((DebugRendererAccessor) this.client.debugRenderer).toggleShowHexBorder();
             this.debugLog(bl2 ? "debug.hexagon_boundaries.on" : "debug.hexagon_boundaries.off", new Object[0]);
+            cir.setReturnValue(true);
+            return;
+        } else if (key == incSideKey.getCode()) {
+            config.side += 2;
+            HexBorderMod.CONFIG_MANAGER.save();
+            cir.setReturnValue(true);
+            return;
+        } else if (key == decSideKey.getCode()) {
+            if (config.side == HexBorderConfig.HEXAGON_SIDE_MIN) {
+                HexBorderMod.LOGGER.warn("side length must be greater than or equal to {}",
+                        HexBorderConfig.HEXAGON_SIDE_MIN);
+                cir.setReturnValue(true);
+                return;
+            }
+
+            config.side -= 2;
+            HexBorderMod.CONFIG_MANAGER.save();
             cir.setReturnValue(true);
             return;
         } else if (key == incOffsetXKeyCode.getCode()) {

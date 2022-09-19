@@ -14,7 +14,9 @@ import atonkish.hexborder.integration.autoconfig.annotation.ModConfigEntry;
 
 @Config(name = HexBorderMod.MOD_ID)
 public class HexBorderConfig implements ConfigData {
-    @ModConfigEntry.HexagonSide(min = 4)
+    public static final int HEXAGON_SIDE_MIN = 2;
+
+    @ModConfigEntry.HexagonSide(min = HEXAGON_SIDE_MIN)
     public int side = 8;
 
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
@@ -67,9 +69,20 @@ public class HexBorderConfig implements ConfigData {
     }
 
     public static class F3KeyBindings {
+        // toggle
         public ModifierKeyCode toggleShowBorderKey = ModifierKeyCode.of(
                 Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_X),
                 Modifier.none());
+
+        // side
+        public ModifierKeyCode incSideKey = ModifierKeyCode.of(
+                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_PAGE_UP),
+                Modifier.none());
+        public ModifierKeyCode decSideKey = ModifierKeyCode.of(
+                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_PAGE_DOWN),
+                Modifier.none());
+
+        // offset
         public ModifierKeyCode incOffsetXKey = ModifierKeyCode.of(
                 Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_RIGHT),
                 Modifier.none());
