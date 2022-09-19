@@ -96,6 +96,7 @@ public class ModGuiProviders {
                                             Utils.getUnsafely(field, config, ModifierKeyCode.unknown()))
                                     .setModifierDefaultValue(() -> Utils.getUnsafely(field, defaults))
                                     .setModifierSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue))
+                                    .setAllowModifiers(false)
                                     .build());
                 },
                 field -> field.getType() == ModifierKeyCode.class);

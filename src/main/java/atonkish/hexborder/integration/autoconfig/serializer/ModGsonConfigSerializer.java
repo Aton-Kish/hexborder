@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -36,29 +36,22 @@ public class ModGsonConfigSerializer<T extends ConfigData> extends GsonConfigSer
     private static class ModifierKeyCodeSerializer implements JsonSerializer<ModifierKeyCode> {
         @Override
         public JsonElement serialize(ModifierKeyCode keyCode, Type type, JsonSerializationContext context) {
-            JsonObject object = new JsonObject();
-            object.addProperty("keyCode", keyCode.getKeyCode().getTranslationKey());
-            object.addProperty("modifier", keyCode.getModifier().getValue());
-
-            return object;
+            JsonPrimitive key = new JsonPrimitive(keyCode.getKeyCode().getTranslationKey());
+            return key;
         }
     }
 
     private static class ModifierKeyCodeDeserializer implements JsonDeserializer<ModifierKeyCode> {
         @Override
         public ModifierKeyCode deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
-            JsonObject object = json.getAsJsonObject();
+            String key = json.getAsString();
 
-            String serializedKeyCode = object.get("keyCode").getAsString();
-            Key keyCode = InputUtil.fromTranslationKey(serializedKeyCode);
+            Key keyCode = InputUtil.fromTranslationKey(key);
             if (keyCode.equals(InputUtil.UNKNOWN_KEY)) {
                 return ModifierKeyCode.unknown();
             }
 
-            short serializedModifier = object.get("modifier").getAsShort();
-            Modifier modifier = Modifier.of(serializedModifier);
-
-            return ModifierKeyCode.of(keyCode, modifier);
+            return ModifierKeyCode.of(keyCode, Modifier.none());
         }
     }
 }
