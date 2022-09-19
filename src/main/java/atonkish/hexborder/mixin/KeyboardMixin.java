@@ -31,13 +31,13 @@ public abstract class KeyboardMixin {
     @Inject(method = "processF3", at = @At("HEAD"), cancellable = true)
     public void processF3(final int key, final CallbackInfoReturnable<Boolean> cir) {
         HexBorderConfig config = HexBorderMod.CONFIG_MANAGER.get();
-        Key toggleShowBorderKeyCode = config.f3KeyBindings.toggleShowBorderKey.getKeyCode();
-        Key incSideKey = config.f3KeyBindings.incSideKey.getKeyCode();
-        Key decSideKey = config.f3KeyBindings.decSideKey.getKeyCode();
-        Key incOffsetXKeyCode = config.f3KeyBindings.incOffsetXKey.getKeyCode();
-        Key decOffsetXKeyCode = config.f3KeyBindings.decOffsetXKey.getKeyCode();
-        Key incOffsetZKeyCode = config.f3KeyBindings.incOffsetZKey.getKeyCode();
-        Key decOffsetZKeyCode = config.f3KeyBindings.decOffsetZKey.getKeyCode();
+        Key toggleShowBorderKeyCode = config.f3KeyBindings.toggleShowBorderKey;
+        Key incSideKey = config.f3KeyBindings.incSideKey;
+        Key decSideKey = config.f3KeyBindings.decSideKey;
+        Key incOffsetXKeyCode = config.f3KeyBindings.incOffsetXKey;
+        Key decOffsetXKeyCode = config.f3KeyBindings.decOffsetXKey;
+        Key incOffsetZKeyCode = config.f3KeyBindings.incOffsetZKey;
+        Key decOffsetZKeyCode = config.f3KeyBindings.decOffsetZKey;
 
         if (key == toggleShowBorderKeyCode.getCode()) {
             boolean bl2 = ((DebugRendererAccessor) this.client.debugRenderer).toggleShowHexBorder();

@@ -3,9 +3,8 @@ package atonkish.hexborder;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.clothconfig2.api.Modifier;
-import me.shedaniel.clothconfig2.api.ModifierKeyCode;
 
+import net.minecraft.client.util.InputUtil.Key;
 import net.minecraft.client.util.InputUtil.Type;
 
 import org.lwjgl.glfw.GLFW;
@@ -80,30 +79,16 @@ public class HexBorderConfig implements ConfigData {
 
     public static class F3KeyBindings {
         // toggle
-        public ModifierKeyCode toggleShowBorderKey = ModifierKeyCode.of(
-                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_X),
-                Modifier.none());
+        public Key toggleShowBorderKey = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_X);
 
         // side
-        public ModifierKeyCode incSideKey = ModifierKeyCode.of(
-                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_PAGE_UP),
-                Modifier.none());
-        public ModifierKeyCode decSideKey = ModifierKeyCode.of(
-                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_PAGE_DOWN),
-                Modifier.none());
+        public Key incSideKey = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_PAGE_UP);
+        public Key decSideKey = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_PAGE_DOWN);
 
         // offset
-        public ModifierKeyCode incOffsetXKey = ModifierKeyCode.of(
-                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_RIGHT),
-                Modifier.none());
-        public ModifierKeyCode decOffsetXKey = ModifierKeyCode.of(
-                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT),
-                Modifier.none());
-        public ModifierKeyCode incOffsetZKey = ModifierKeyCode.of(
-                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_UP),
-                Modifier.none());
-        public ModifierKeyCode decOffsetZKey = ModifierKeyCode.of(
-                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_DOWN),
-                Modifier.none());
+        public Key incOffsetXKey = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_RIGHT);
+        public Key decOffsetXKey = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT);
+        public Key incOffsetZKey = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_UP);
+        public Key decOffsetZKey = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_DOWN);
     }
 }

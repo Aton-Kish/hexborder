@@ -14,8 +14,6 @@ import com.google.gson.JsonSerializer;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import me.shedaniel.clothconfig2.api.Modifier;
-import me.shedaniel.clothconfig2.api.ModifierKeyCode;
 
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
@@ -28,30 +26,26 @@ public class ModGsonConfigSerializer<T extends ConfigData> extends GsonConfigSer
     public ModGsonConfigSerializer(Config definition, Class<T> configClass) {
         this(definition, configClass,
                 new GsonBuilder()
-                        .registerTypeAdapter(ModifierKeyCode.class, new ModifierKeyCodeSerializer())
-                        .registerTypeAdapter(ModifierKeyCode.class, new ModifierKeyCodeDeserializer())
+                        .registerTypeAdapter(Key.class, new KeySerializer())
+                        .registerTypeAdapter(Key.class, new KeyDeserializer())
                         .setPrettyPrinting().create());
     }
 
-    private static class ModifierKeyCodeSerializer implements JsonSerializer<ModifierKeyCode> {
+    private static class KeySerializer implements JsonSerializer<Key> {
         @Override
-        public JsonElement serialize(ModifierKeyCode keyCode, Type type, JsonSerializationContext context) {
-            JsonPrimitive key = new JsonPrimitive(keyCode.getKeyCode().getTranslationKey());
+        public JsonElement serialize(Key keyCode, Type type, JsonSerializationContext context) {
+            JsonPrimitive key = new JsonPrimitive(keyCode.getTranslationKey());
             return key;
         }
     }
 
-    private static class ModifierKeyCodeDeserializer implements JsonDeserializer<ModifierKeyCode> {
+    private static class KeyDeserializer implements JsonDeserializer<Key> {
         @Override
-        public ModifierKeyCode deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
+        public Key deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
             String key = json.getAsString();
 
             Key keyCode = InputUtil.fromTranslationKey(key);
-            if (keyCode.equals(InputUtil.UNKNOWN_KEY)) {
-                return ModifierKeyCode.unknown();
-            }
-
-            return ModifierKeyCode.of(keyCode, Modifier.none());
+            return keyCode;
         }
     }
 }

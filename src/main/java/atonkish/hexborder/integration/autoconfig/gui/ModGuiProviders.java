@@ -7,8 +7,9 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.api.ModifierKeyCode;
 
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.InputUtil.Key;
 import net.minecraft.text.Text;
 
 import atonkish.hexborder.HexBorderMod;
@@ -45,10 +46,9 @@ public class ModGuiProviders {
                                     .setMin(side.min())
                                     .setErrorSupplier((value) -> {
                                         if (value % 2 != 0) {
-                                            return Optional
-                                                    .of(Text.translatable("text.cloth-config."
-                                                            + HexBorderMod.MOD_ID
-                                                            + ".error.odd"));
+                                            return Optional.of(Text.translatable("text.cloth-config."
+                                                    + HexBorderMod.MOD_ID
+                                                    + ".error.odd"));
                                         }
 
                                         return Optional.empty();
@@ -66,15 +66,14 @@ public class ModGuiProviders {
                 (i18n, field, config, defaults, guiProvider) -> {
                     return Collections.singletonList(
                             ENTRY_BUILDER
-                                    .startModifierKeyCodeField(Text.translatable(i18n),
-                                            Utils.getUnsafely(field, config, ModifierKeyCode.unknown()))
-                                    .setModifierDefaultValue(() -> Utils.getUnsafely(field, defaults))
-                                    .setModifierSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue))
-                                    .setAllowModifiers(false)
+                                    .startKeyCodeField(Text.translatable(i18n),
+                                            Utils.getUnsafely(field, config, InputUtil.UNKNOWN_KEY))
+                                    .setDefaultValue(() -> Utils.getUnsafely(field, defaults))
+                                    .setKeySaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue))
                                     .setAllowMouse(false)
                                     .build());
                 },
-                field -> field.getType() == ModifierKeyCode.class);
+                field -> field.getType() == Key.class);
 
         return registry;
     }
