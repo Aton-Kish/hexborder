@@ -91,7 +91,8 @@ public class Hexagon implements Polygon {
 
                 if (x >= side / 2.0D) {
                     Vec3d pos = origin.add(delta).add(0.5, 0, 0.5);
-                    if (Hexagon.calcCrossXZ(rel1, vec1.relativize(pos)) < 0) {
+                    double cross = Hexagon.calcCrossXZ(rel1, vec1.relativize(pos));
+                    if (cross < 0 || (cross == 0 && this.index.x % 2 == 0)) {
                         continue;
                     }
                 }
@@ -158,7 +159,8 @@ public class Hexagon implements Polygon {
         Vec3d vec1 = hexagon.getVertexPos(isEven ? 0 : 5);
         Vec3d vec2 = hexagon.getVertexPos(isEven ? 1 : 0);
 
-        return Hexagon.calcCrossXZ(vec1.relativize(vec2), vec1.relativize(pos)) >= 0 ? index1 : index2;
+        double cross = Hexagon.calcCrossXZ(vec1.relativize(vec2), vec1.relativize(pos));
+        return cross >= 0 ? index1 : index2;
     }
 
     private static Vec2<Double> calcApproximateOriginIndex(Vec3d pos, Vec3d offset, int side) {
