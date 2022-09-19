@@ -8,7 +8,6 @@ import me.shedaniel.autoconfig.ConfigHolder;
 
 import net.fabricmc.api.ModInitializer;
 
-import atonkish.hexborder.integration.autoconfig.event.ModSave;
 import atonkish.hexborder.integration.autoconfig.gui.ModGuiProviders;
 import atonkish.hexborder.integration.autoconfig.serializer.ModGsonConfigSerializer;
 
@@ -21,8 +20,6 @@ public class HexBorderMod implements ModInitializer {
 	public void onInitialize() {
 		// Auto Config
 		ModGuiProviders.apply(AutoConfig.getGuiRegistry(HexBorderConfig.class));
-
 		CONFIG_MANAGER = AutoConfig.register(HexBorderConfig.class, ModGsonConfigSerializer::new);
-		CONFIG_MANAGER.registerSaveListener(new ModSave<HexBorderConfig>());
 	}
 }
