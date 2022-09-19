@@ -31,10 +31,35 @@ public abstract class KeyboardMixin {
     @Inject(method = "processF3", at = @At("HEAD"), cancellable = true)
     public void processF3(final int key, final CallbackInfoReturnable<Boolean> cir) {
         HexBorderConfig config = HexBorderMod.CONFIG_MANAGER.get();
-        Key keyCode = config.f3KeyBindings.toggleShowBorderKey.getKeyCode();
-        if (key == keyCode.getCode()) {
+        Key toggleShowBorderKeyCode = config.f3KeyBindings.toggleShowBorderKey.getKeyCode();
+        Key incOffsetXKeyCode = config.f3KeyBindings.incOffsetXKey.getKeyCode();
+        Key decOffsetXKeyCode = config.f3KeyBindings.decOffsetXKey.getKeyCode();
+        Key incOffsetZKeyCode = config.f3KeyBindings.incOffsetZKey.getKeyCode();
+        Key decOffsetZKeyCode = config.f3KeyBindings.decOffsetZKey.getKeyCode();
+
+        if (key == toggleShowBorderKeyCode.getCode()) {
             boolean bl2 = ((DebugRendererAccessor) this.client.debugRenderer).toggleShowHexBorder();
             this.debugLog(bl2 ? "debug.hexagon_boundaries.on" : "debug.hexagon_boundaries.off", new Object[0]);
+            cir.setReturnValue(true);
+            return;
+        } else if (key == incOffsetXKeyCode.getCode()) {
+            config.offset.x++;
+            HexBorderMod.CONFIG_MANAGER.save();
+            cir.setReturnValue(true);
+            return;
+        } else if (key == decOffsetXKeyCode.getCode()) {
+            config.offset.x--;
+            HexBorderMod.CONFIG_MANAGER.save();
+            cir.setReturnValue(true);
+            return;
+        } else if (key == incOffsetZKeyCode.getCode()) {
+            config.offset.z++;
+            HexBorderMod.CONFIG_MANAGER.save();
+            cir.setReturnValue(true);
+            return;
+        } else if (key == decOffsetZKeyCode.getCode()) {
+            config.offset.z--;
+            HexBorderMod.CONFIG_MANAGER.save();
             cir.setReturnValue(true);
             return;
         }

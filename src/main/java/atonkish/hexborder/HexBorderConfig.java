@@ -70,5 +70,17 @@ public class HexBorderConfig implements ModConfigData {
         public ModifierKeyCode toggleShowBorderKey = ModifierKeyCode.of(
                 Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_X),
                 Modifier.none());
+        public ModifierKeyCode incOffsetXKey = ModifierKeyCode.of(
+                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_RIGHT),
+                Modifier.none());
+        public ModifierKeyCode decOffsetXKey = ModifierKeyCode.of(
+                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_LEFT),
+                Modifier.none());
+        public ModifierKeyCode incOffsetZKey = ModifierKeyCode.of(
+                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_UP),
+                Modifier.none());
+        public ModifierKeyCode decOffsetZKey = ModifierKeyCode.of(
+                Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_DOWN),
+                Modifier.none());
     }
 }
