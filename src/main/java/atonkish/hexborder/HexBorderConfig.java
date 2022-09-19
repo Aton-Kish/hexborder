@@ -13,18 +13,23 @@ import atonkish.hexborder.integration.autoconfig.annotation.ModConfigEntry;
 
 @Config(name = HexBorderMod.MOD_ID)
 public class HexBorderConfig implements ConfigData {
+    // static
     @ConfigEntry.Gui.Excluded
     public static final int HEXAGON_SIDE_DEFAULT = 8;
+
     @ConfigEntry.Gui.Excluded
     public static final int HEXAGON_SIDE_MIN = 2;
 
     @ConfigEntry.Gui.Excluded
     public static final int GRID_DISTANCE_DEFAULT = 8;
+
     @ConfigEntry.Gui.Excluded
     public static final int GRID_DISTANCE_MIN = 4;
+
     @ConfigEntry.Gui.Excluded
     public static final int GRID_DISTANCE_MAX = 32;
 
+    // basic
     @ModConfigEntry.HexagonSide(min = HEXAGON_SIDE_MIN)
     public int side = HEXAGON_SIDE_DEFAULT;
 
@@ -34,6 +39,7 @@ public class HexBorderConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = GRID_DISTANCE_MIN, max = GRID_DISTANCE_MAX)
     public int gridDistance = GRID_DISTANCE_DEFAULT;
 
+    // colors
     @ConfigEntry.Category("colors")
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public HexBorderColors mainColors = new HexBorderColors(0xFF0000FF, 0xFFFF0000, 0xFF009B9B, 0xFFFFFF00, 0xFF0000FF);
@@ -42,6 +48,7 @@ public class HexBorderConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public HexBorderColors neighborColors = new HexBorderColors(0x00000000, 0xFFFF0000, 0xFF009B9B, 0xFFFFFF00, 0x00000000);
 
+    // f3 key bindings
     @ConfigEntry.Category("f3KeyBindings")
     @ConfigEntry.Gui.TransitiveObject
     public F3KeyBindings f3KeyBindings = new F3KeyBindings();
