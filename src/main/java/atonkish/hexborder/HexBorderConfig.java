@@ -14,16 +14,26 @@ import atonkish.hexborder.integration.autoconfig.annotation.ModConfigEntry;
 
 @Config(name = HexBorderMod.MOD_ID)
 public class HexBorderConfig implements ConfigData {
+    @ConfigEntry.Gui.Excluded
+    public static final int HEXAGON_SIDE_DEFAULT = 8;
+    @ConfigEntry.Gui.Excluded
     public static final int HEXAGON_SIDE_MIN = 2;
 
-    @ModConfigEntry.HexagonSide(min = HEXAGON_SIDE_MIN)
-    public int side = 8;
+    @ConfigEntry.Gui.Excluded
+    public static final int GRID_DISTANCE_DEFAULT = 8;
+    @ConfigEntry.Gui.Excluded
+    public static final int GRID_DISTANCE_MIN = 4;
+    @ConfigEntry.Gui.Excluded
+    public static final int GRID_DISTANCE_MAX = 32;
 
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    @ModConfigEntry.HexagonSide(min = HEXAGON_SIDE_MIN)
+    public int side = HEXAGON_SIDE_DEFAULT;
+
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = false)
     public Offset offset = new Offset();
 
-    @ConfigEntry.BoundedDiscrete(min = 4, max = 32)
-    public int viewDistance = 16;
+    @ConfigEntry.BoundedDiscrete(min = GRID_DISTANCE_MIN, max = GRID_DISTANCE_MAX)
+    public int gridDistance = GRID_DISTANCE_DEFAULT;
 
     @ConfigEntry.Category("colors")
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)

@@ -180,7 +180,7 @@ public class HexBorderDebugRenderer implements Renderer {
     private Optional<Double> retrieveGridY(World world, Vec3d playerPos, Vec3d gridPos) {
         Vec3d retriever = new Vec3d(gridPos.x, playerPos.y + 1, gridPos.z);
 
-        while (playerPos.distanceTo(retriever) < this.config.viewDistance) {
+        while (playerPos.distanceTo(retriever) < this.config.gridDistance) {
             BlockPos gridBlockPos = new BlockPos(retriever);
             BlockPos footBlockPos = gridBlockPos.down();
 
