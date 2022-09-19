@@ -71,6 +71,7 @@ public class ModGuiProviders {
                                     .setModifierDefaultValue(() -> Utils.getUnsafely(field, defaults))
                                     .setModifierSaveConsumer(newValue -> Utils.setUnsafely(field, config, newValue))
                                     .setAllowModifiers(false)
+                                    .setAllowMouse(false)
                                     .build());
                 },
                 field -> field.getType() == ModifierKeyCode.class);
