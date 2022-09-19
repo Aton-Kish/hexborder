@@ -103,11 +103,7 @@ public class HexBorderDebugRenderer implements Renderer {
             this.renderHorizontalPolyline(bufferBuilder, sideHorizontalColor, y, vertices);
         }
 
-        tessellator.draw();
-
-        RenderSystem.lineWidth(2.0f);
-        bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
-
+        // Grid
         this.renderGrid(bufferBuilder, colors.grid, world, playerPos, areaPointList, cameraX, cameraY, cameraZ);
 
         tessellator.draw();
@@ -155,7 +151,7 @@ public class HexBorderDebugRenderer implements Renderer {
                 continue;
             }
 
-            Vec3d gridPos = new Vec3d(point.x, gridY.get() + 0.05D, point.z).add(-cameraX, -cameraY, -cameraZ);
+            Vec3d gridPos = new Vec3d(point.x, gridY.get() + 0.005D, point.z).add(-cameraX, -cameraY, -cameraZ);
 
             bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
             bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
@@ -164,16 +160,6 @@ public class HexBorderDebugRenderer implements Renderer {
             bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
             bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
             bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
-
-            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
-            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
-            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(color).next();
-            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
-
-            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(TRANSPARENT).next();
-            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
-            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
-            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
         }
     }
 
