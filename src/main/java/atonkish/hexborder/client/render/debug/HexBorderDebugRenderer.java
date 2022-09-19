@@ -108,15 +108,7 @@ public class HexBorderDebugRenderer implements Renderer {
         RenderSystem.lineWidth(2.0f);
         bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-        for (Vec3d point : areaPointList) {
-            Optional<Double> gridY = this.retrieveGridY(world, playerPos, point);
-            if (gridY.isEmpty()) {
-                continue;
-            }
-
-            Vec3d gridPos = new Vec3d(point.x, gridY.get() + 0.05D, point.z).add(-cameraX, -cameraY, -cameraZ);
-            this.renderGrid(bufferBuilder, colors.grid, world, playerPos, gridPos);
-        }
+        this.renderGrid(bufferBuilder, colors.grid, world, playerPos, areaPointList, cameraX, cameraY, cameraZ);
 
         tessellator.draw();
     }
@@ -150,29 +142,39 @@ public class HexBorderDebugRenderer implements Renderer {
         bufferBuilder.vertex(vertices[0].x, y, vertices[0].z).color(TRANSPARENT).next();
     }
 
-    private void renderGrid(BufferBuilder bufferBuilder, int color, World world, Vec3d playerPos, Vec3d gridPos) {
+    private void renderGrid(BufferBuilder bufferBuilder, int color, World world, Vec3d playerPos, List<Vec3d> areaPointList,
+            double cameraX, double cameraY, double cameraZ) {
         int alpha = ColorHelper.Argb.getAlpha(color);
         if (alpha == 0) {
             return;
         }
 
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
-        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
-        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(color).next();
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+        for (Vec3d point : areaPointList) {
+            Optional<Double> gridY = this.retrieveGridY(world, playerPos, point);
+            if (gridY.isEmpty()) {
+                continue;
+            }
 
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
-        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(color).next();
-        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
+            Vec3d gridPos = new Vec3d(point.x, gridY.get() + 0.05D, point.z).add(-cameraX, -cameraY, -cameraZ);
 
-        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(TRANSPARENT).next();
-        bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
-        bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
+            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
+            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(color).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z).color(color).next();
+            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(color).next();
+            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
+
+            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(TRANSPARENT).next();
+            bufferBuilder.vertex(gridPos.x + 1, gridPos.y, gridPos.z).color(color).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(color).next();
+            bufferBuilder.vertex(gridPos.x, gridPos.y, gridPos.z + 1).color(TRANSPARENT).next();
+        }
     }
 
     private Optional<Double> retrieveGridY(World world, Vec3d playerPos, Vec3d gridPos) {
